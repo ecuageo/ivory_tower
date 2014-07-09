@@ -1,3 +1,4 @@
+require 'json'
 class IvoryTower::Queue
   attr_reader :name
 
@@ -6,11 +7,19 @@ class IvoryTower::Queue
   end
 
   def messages(&block)
-    bunny_queue.subscribe manual_ack: true, block: true do |delivery_info, properties, body|
+    bunny_queue.subscribe manual_ack: true do |delivery_info, properties, body|
       message = JSON.parse body
       block.call(message)
       channel.ack delivery_info.delivery_tag
     end
+  end
+
+  def publish(message)
+    bunny_queue.publish(message.to_json)
+  end
+
+  def message_count
+    bunny_queue.message_count
   end
 
   private

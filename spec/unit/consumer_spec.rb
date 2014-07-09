@@ -16,7 +16,7 @@ describe IvoryTower::Consumer do
       mult = MultiplyConsumer.new
 
       mock_queue = double(:queue)
-      expect(IvoryTower::Queue).to receive(:new).with("MultiplyConsumer").and_return(mock_queue)
+      expect(IvoryTower::Queue).to receive(:new).with("Multiply").and_return(mock_queue)
       expect(mock_queue).to receive(:messages).and_yield({factors: [2,4]})
 
       mult.run

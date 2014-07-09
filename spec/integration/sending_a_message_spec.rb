@@ -1,12 +1,7 @@
 require 'spec_helper'
 
-# class AdditionQueue
-#   def get_message(msg)
-#   end
-# end
-
-class AdditionPublisher
-  include IvoryTower::Publisher
+class AdditionProducer
+  include IvoryTower::Producer
 
 end
 
@@ -16,17 +11,25 @@ class AdditionConsumer
   include IvoryTower::Consumer
 
   def consume(message)
-    $starting_value = 4
+    $starting_value = message["addends"].first + message["addends"].last
   end
 end
 
 describe 'Sending a message' do
   let(:addition_consumer) { AdditionConsumer.new }
 
-  it 'notifies publishes a message onto a queue' do
+  it 'pushes a message onto the queue' do
+    p = AdditionProducer.new
+    queue = IvoryTower::Queue.new "Addition"
+    expect {
+      p.publish(addends: [1,3])
+    }.to change { queue.message_count }.by(1)
+  end
+
+  it 'changing global through the queue' do
     addition_consumer.run
 
-    p = AdditionPublisher.new
+    p = AdditionProducer.new
     p.publish(addends: [1,3])
 
     expect($starting_value).to eq 4
