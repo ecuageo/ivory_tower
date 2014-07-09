@@ -3,10 +3,10 @@ class IvoryTower::Queue
   attr_reader :name
 
   def initialize(name)
-    @name = name
+    @bunny_queue = IvoryTower::BunnyFactory.queue name
   end
 
-  def messages(&block)
+  def consume(&block)
     bunny_queue.subscribe manual_ack: true do |delivery_info, properties, body|
       message = JSON.parse body
       block.call(message)
@@ -14,29 +14,25 @@ class IvoryTower::Queue
     end
   end
 
-  def publish(message)
+  def produce(message)
     bunny_queue.publish(message.to_json)
   end
 
-  def message_count
+  def size
     bunny_queue.message_count
+  end
+
+  def empty!
+    bunny_queue.purge
   end
 
   private
 
   def bunny_queue
-    @bunny_queue ||= channel.queue(name)
+    @bunny_queue
   end
 
   def channel
-    @channel ||= connection.create_channel
-  end
-
-  def connection
-    unless @connection
-      @connection = Bunny.new ENV['CLOUDAMQP_URL']
-      @connection.start
-    end
-    @connection
+    @bunny_queue.channel
   end
 end

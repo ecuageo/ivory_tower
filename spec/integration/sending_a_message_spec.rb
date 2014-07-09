@@ -22,15 +22,15 @@ describe 'Sending a message' do
     p = AdditionProducer.new
     queue = IvoryTower::Queue.new "Addition"
     expect {
-      p.publish(addends: [1,3])
-    }.to change { queue.message_count }.by(1)
+      p.produce(addends: [1,3])
+    }.to change { queue.size }.by(1)
   end
 
   it 'changing global through the queue' do
     addition_consumer.run
 
     p = AdditionProducer.new
-    p.publish(addends: [1,3])
+    p.produce(addends: [1,3])
 
     expect($starting_value).to eq 4
   end

@@ -5,15 +5,15 @@ class SubtractionProducer
 end
 
 describe IvoryTower::Producer do
-  describe "#publish" do
-    it "publishes to the correct queue" do
+  describe "#produce" do
+    it "produces to the correct queue" do
       sub = SubtractionProducer.new
 
       mock_queue = double(:queue)
       expect(IvoryTower::Queue).to receive(:new).with("Subtraction").and_return(mock_queue)
-      expect(mock_queue).to receive(:publish).with(:message)
+      expect(mock_queue).to receive(:produce).with(:message)
 
-      sub.publish(:message)
+      sub.produce(:message)
     end
   end
 end

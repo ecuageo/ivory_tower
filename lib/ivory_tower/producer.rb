@@ -1,7 +1,7 @@
 module IvoryTower::Producer
   include IvoryTower::Queueable
 
-  def publish(message)
-    queue.publish(message)
+  def produce(message)
+    queue.produce(message)
   end
 end
