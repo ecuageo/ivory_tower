@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe IvoryTower::Queue do
-  let(:mock_queue) { double(:queue) }
+  let(:stub_queue) { mock_queue }
 
   before :each do
-    expect(IvoryTower::BunnyFactory).to receive(:queue).and_return(mock_queue)
+    allow(IvoryTower::BunnyFactory).to receive(:queue).and_return(stub_queue)
   end
 
   describe "#consume" do
     it "consume wraps rabbit subscribe" do
       queue = IvoryTower::Queue.new "Modulus"
 
-      expect(mock_queue).to receive(:subscribe)
+      expect(stub_queue).to receive(:subscribe)
 
       queue.consume do |message|
         expect(message).to eq nil
@@ -22,7 +22,7 @@ describe IvoryTower::Queue do
   describe "#publish" do
     it "delegates to the rabbit queue" do
       message = {operands: [4, 2]}
-      expect(mock_queue).to receive(:publish).with(message.to_json)
+      expect(stub_queue).to receive(:publish).with(message.to_json)
 
       queue = IvoryTower::Queue.new "Modulus"
       queue.produce(message)

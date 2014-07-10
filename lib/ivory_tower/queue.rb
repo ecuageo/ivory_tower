@@ -7,11 +7,13 @@ class IvoryTower::Queue
   end
 
   def consume(&block)
-    bunny_queue.subscribe manual_ack: true do |delivery_info, properties, body|
+    bunny_queue.subscribe subscribe_options do |delivery_info, properties, body|
       message = JSON.parse body
       block.call(message)
       channel.ack delivery_info.delivery_tag
     end
+  ensure
+    close_connection
   end
 
   def produce(message)
@@ -27,6 +29,16 @@ class IvoryTower::Queue
   end
 
   private
+
+  def subscribe_options
+    {manual_ack: true, block: true}
+  end
+
+  def close_connection
+    unless channel.connection.status == :closed
+      channel.connection.close
+    end
+  end
 
   def bunny_queue
     @bunny_queue
