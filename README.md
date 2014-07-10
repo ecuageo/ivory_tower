@@ -1,4 +1,4 @@
-# IvoryTower
+# Ivory Tower [![CircleCI](https://circleci.com/gh/tanner-labs/ivory_tower.png?circle-token=d0d8dfe7fdca1c740a6e65a9503f461267126bb7)](https://circleci.com/gh/tanner-labs/ivory_tower)
 
 TODO: Write a gem description
 
