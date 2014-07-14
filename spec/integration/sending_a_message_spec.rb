@@ -17,7 +17,7 @@ end
 describe 'Sending a message' do
   before :each do
     allow_any_instance_of(IvoryTower::Queue).to receive(:subscribe_options).and_return(manual_ack: true, block: false)
-    allow_any_instance_of(IvoryTower::Queue).to receive(:close_connection)
+    allow_any_instance_of(IvoryTower::Queue).to receive(:close)
   end
 
   after :each do
@@ -42,5 +42,18 @@ describe 'Sending a message' do
 
     sleep 0.25
     expect($addition_value).to eq 4
+  end
+end
+
+describe 'running the consumer' do
+  # is this necessary? won't the ensure block catch this?
+  it 'answers to stop' do
+    consumer = AdditionConsumer.new
+    t = Thread.new do
+      consumer.run
+    end
+    connection = consumer.send(:queue).send(:channel).connection
+    expect(connection).to receive(:close).and_call_original
+    consumer.stop
   end
 end

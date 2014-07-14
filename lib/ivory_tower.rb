@@ -1,5 +1,6 @@
 require "ivory_tower/version"
 require "bunny"
+require 'pry-byebug'
 
 module IvoryTower
   require "ivory_tower/bunny_factory"

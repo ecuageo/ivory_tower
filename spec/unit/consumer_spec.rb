@@ -24,4 +24,16 @@ describe IvoryTower::Consumer do
       expect($multiply_result).to eq 8
     end
   end
+
+  describe "#stop" do
+    it "closes the connection" do
+      mocked = mock_queue
+      expect(IvoryTower::Queue).to receive(:new).with("Multiply").and_return(mocked)
+
+      mult = MultiplyConsumer.new
+
+      expect(mocked).to receive(:close)
+      mult.stop
+    end
+  end
 end

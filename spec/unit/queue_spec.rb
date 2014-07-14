@@ -28,4 +28,12 @@ describe IvoryTower::Queue do
       queue.produce(message)
     end
   end
+
+  describe "#close" do
+    it "closes the connection" do
+      queue = IvoryTower::Queue.new "Modulus"
+      expect(stub_queue.channel.connection).to receive(:close)
+      queue.close
+    end
+  end
 end

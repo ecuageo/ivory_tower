@@ -13,7 +13,7 @@ class IvoryTower::Queue
       channel.ack delivery_info.delivery_tag
     end
   ensure
-    close_connection
+    close
   end
 
   def produce(message)
@@ -28,16 +28,16 @@ class IvoryTower::Queue
     bunny_queue.purge
   end
 
+  def close
+    unless [:closed, :closing].include? channel.connection.status
+      channel.connection.close
+    end
+  end
+
   private
 
   def subscribe_options
     {manual_ack: true, block: true}
-  end
-
-  def close_connection
-    unless channel.connection.status == :closed
-      channel.connection.close
-    end
   end
 
   def bunny_queue

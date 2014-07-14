@@ -6,4 +6,8 @@ module IvoryTower::Consumer
       consume(message)
     end
   end
+
+  def stop
+    queue.close
+  end
 end
