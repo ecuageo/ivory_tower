@@ -8,7 +8,7 @@ class IvoryTower::Queue
 
   def consume(&block)
     bunny_queue.subscribe subscribe_options do |delivery_info, properties, body|
-      message = JSON.parse body
+      message = Hashie::Mash.new(JSON.parse(body))
       block.call(message)
       channel.ack delivery_info.delivery_tag
     end

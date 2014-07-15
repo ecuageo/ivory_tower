@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
   
   spec.add_dependency "bunny"
+  spec.add_dependency "hashie"
 end
