@@ -16,7 +16,6 @@ end
 
 describe 'Sending a message' do
   before :each do
-    allow_any_instance_of(IvoryTower::Queue).to receive(:subscribe_options).and_return(manual_ack: true, block: false)
     allow_any_instance_of(IvoryTower::Queue).to receive(:close_connection)
   end
 
@@ -35,7 +34,7 @@ describe 'Sending a message' do
   end
 
   it 'changes global through the queue' do
-    AdditionConsumer.new.run
+    AdditionConsumer.new.run({block: false})
 
     p = AdditionProducer.new
     p.produce(addends: [1,3])

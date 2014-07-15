@@ -24,6 +24,10 @@ class IvoryTower::Queue
     bunny_queue.message_count
   end
 
+  def subscribe_options=(changes)
+    subscribe_options.merge!(changes)
+  end
+
   def empty!
     bunny_queue.purge
   end
@@ -31,7 +35,7 @@ class IvoryTower::Queue
   private
 
   def subscribe_options
-    {manual_ack: true, block: true}
+    @subscribe_options ||= {manual_ack: true, block: true}
   end
 
   def close_connection
