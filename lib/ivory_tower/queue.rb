@@ -13,7 +13,7 @@ class IvoryTower::Queue
       channel.ack delivery_info.delivery_tag
     end
   ensure
-    close_connection
+    close_connection if subscribe_options[:block]
   end
 
   def produce(message)
