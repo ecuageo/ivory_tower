@@ -24,4 +24,13 @@ describe IvoryTower::Consumer do
       expect($multiply_result).to eq 8
     end
   end
+
+  describe "#job_id" do
+    it "supplies a unique id for every job" do
+      mult = MultiplyConsumer.new
+      expect(mult.job_id).to_not eq nil
+      expect(mult.job_id).to_not eq ""
+      expect(mult.job_id).to_not eq(MultiplyConsumer.new.job_id)
+    end
+  end
 end

@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module IvoryTower::Consumer
   include IvoryTower::Queueable
   
@@ -7,5 +9,9 @@ module IvoryTower::Consumer
     queue.consume do |message|
       consume(message)
     end
+  end
+
+  def job_id
+    @job_id ||= SecureRandom.hex
   end
 end
