@@ -7,6 +7,10 @@ module IvoryTower::Queueable
   end
 
   def queue
-    @queue ||= IvoryTower::Queue.new queue_name
+    if @queue
+      return @queue if @queue.open?
+      @queue.close_connection
+    end
+    @queue = IvoryTower::Queue.new queue_name
   end
 end

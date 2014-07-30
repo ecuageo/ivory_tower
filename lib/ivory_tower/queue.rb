@@ -18,6 +18,7 @@ class IvoryTower::Queue
 
   def produce(message)
     bunny_queue.publish(message.to_json)
+    close_connection
   end
 
   def size
@@ -32,16 +33,20 @@ class IvoryTower::Queue
     bunny_queue.purge
   end
 
+  def open?
+    connection.status == :open
+  end
+
+  def close_connection
+    unless connection.status == :closed
+      connection.close
+    end
+  end
+
   private
 
   def subscribe_options
     @subscribe_options ||= {manual_ack: true, block: true}
-  end
-
-  def close_connection
-    unless channel.connection.status == :closed
-      channel.connection.close
-    end
   end
 
   def bunny_queue
@@ -50,5 +55,9 @@ class IvoryTower::Queue
 
   def channel
     @bunny_queue.channel
+  end
+
+  def connection
+    channel.connection
   end
 end
